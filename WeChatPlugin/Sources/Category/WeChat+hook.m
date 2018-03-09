@@ -21,6 +21,7 @@ static char tkRemoteControlWindowControllerKey;     //  远程控制窗口的关
 
 @implementation NSObject (WeChatHook)
 
+
 + (void)hookWeChat {
     //      微信撤回消息
     tk_hookMethod(objc_getClass("MessageService"), @selector(onRevokeMsg:), [self class], @selector(hook_onRevokeMsg:));
@@ -531,7 +532,18 @@ static char tkRemoteControlWindowControllerKey;     //  远程控制窗口的关
             NSArray * keyWordArray = [model.keyword componentsSeparatedByString:@"|"];
             [keyWordArray enumerateObjectsUsingBlock:^(NSString *keyword, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([keyword isEqualToString:@"*"] || [msgContent isEqualToString:keyword]) {
-                    [service SendTextMessage:currentUserName toUsrName:addMsg.fromUserName.string msgText:randomReplyContent atUserList:nil];
+                    if (model.enableMatch) {
+                        
+                        NSString *replyContent = [NSString stringWithFormat:@"%@ 来自:%@ 关键词:%@", randomReplyContent, addMsg.fromUserName.string, keyword];
+                        
+                        NSUserNotification *notification = [[NSUserNotification alloc] init];
+                        notification.title = replyContent;
+                        [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+                        [service SendTextMessage:currentUserName toUsrName:currentUserName msgText:replyContent atUserList:nil];
+                    } else {
+                        [service SendTextMessage:currentUserName toUsrName:addMsg.fromUserName.string msgText:randomReplyContent atUserList:nil];
+                    }
+
                 }
             }];
         }

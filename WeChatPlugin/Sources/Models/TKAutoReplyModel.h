@@ -16,6 +16,7 @@
 @property (nonatomic, assign) BOOL enableGroupReply;        /**<    是否开启群聊自动回复  */
 @property (nonatomic, assign) BOOL enableSingleReply;       /**<    是否开启私聊自动回复  */
 @property (nonatomic, assign) BOOL enableRegex;             /**<    是否开启正则匹配     */
+@property (nonatomic, assign) BOOL enableMatch;             /** 是否开启匹配通知 */
 
 - (BOOL)hasEmptyKeywordOrReplyContent;
 

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSTextField *autoReplyLabel;
 @property (nonatomic, strong) NSTextField *autoReplyContentField;
 @property (nonatomic, strong) NSButton *enableGroupReplyBtn;
+@property (nonatomic, strong) NSButton *enableMatchBtn;
 @property (nonatomic, strong) NSButton *enableSingleReplyBtn;
 @property (nonatomic, strong) NSButton *enableRegexBtn;
 
@@ -41,6 +42,13 @@
     self.enableGroupReplyBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:@"开启群聊自动回复" target:self action:@selector(clickEnableGroupBtn:)];
         btn.frame = NSMakeRect(20, 40, 400, 20);
+        
+        btn;
+    });
+    
+    self.enableMatchBtn = ({
+        NSButton *btn = [NSButton tk_checkboxWithTitle:@"开启匹配通知模式" target:self action:@selector(clickEnableMatchBtn:)];
+        btn.frame = NSMakeRect(200, 15, 400, 20);
         
         btn;
     });
@@ -87,6 +95,7 @@
     [self addSubviews:@[self.enableRegexBtn,
                         self.enableGroupReplyBtn,
                         self.enableSingleReplyBtn,
+                        self.enableMatchBtn,
                         self.autoReplyContentField,
                         self.autoReplyLabel,
                         self.keywordTextField,
@@ -99,22 +108,27 @@
 
 - (void)clickEnableGroupBtn:(NSButton *)btn {
     self.model.enableGroupReply = btn.state;
-    if (btn.state) {
+    [self updateState];
+    if (self.endEdit) self.endEdit();
+}
+
+- (void)updateState {
+    if (self.model.enableGroupReply || self.model.enableSingleReply) {
         self.model.enable = YES;
-    } else if(!self.model.enableSingleReply) {
+    } else {
         self.model.enable = NO;
     }
-    
+}
+
+- (void)clickEnableMatchBtn:(NSButton *)btn {
+    self.model.enableMatch = btn.state;
+    [self updateState];
     if (self.endEdit) self.endEdit();
 }
 
 - (void)clickEnableSingleBtn:(NSButton *)btn {
     self.model.enableSingleReply = btn.state;
-    if (btn.state) {
-        self.model.enable = YES;
-    } else if(!self.model.enableGroupReply) {
-        self.model.enable = NO;
-    }
+    [self updateState];
     if (self.endEdit) self.endEdit();
 }
 

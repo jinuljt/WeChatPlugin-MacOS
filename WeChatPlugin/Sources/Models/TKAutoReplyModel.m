@@ -19,6 +19,7 @@
         self.enableGroupReply = [dict[@"enableGroupReply"] boolValue];
         self.enableSingleReply = [dict[@"enableSingleReply"] boolValue];
         self.enableRegex = [dict[@"enableRegex"] boolValue];
+        self.enableMatch = [dict[@"enableMatch"] boolValue];
     }
     return self;
 }
@@ -29,7 +30,9 @@
              @"replyContent": self.replyContent,
              @"enableGroupReply": @(self.enableGroupReply),
              @"enableSingleReply": @(self.enableSingleReply),
-             @"enableRegex": @(self.enableRegex)};
+             @"enableRegex": @(self.enableRegex),
+             @"enableMatch": @(self.enableMatch)
+             };
 }
 
 - (BOOL)hasEmptyKeywordOrReplyContent {
